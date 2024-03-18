@@ -54,6 +54,7 @@ class SuzukiKasami {
 }
 
 
+output:
 Enter process ID (0 to 4): 0
 Enter process ID (0 to 4): 0
 Process 0 is in CS
