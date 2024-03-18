@@ -1,0 +1,73 @@
+import java.util.*;
+
+public class Ric_Agr {
+    private static final int numProcesses = 5;
+    private static int processID;
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter process ID (0 to " + (numProcesses - 1) + "): ");
+        processID = scanner.nextInt();
+        scanner.close();
+
+        for (int i = 0; i < numProcesses; i++) {
+            if (i != processID) {
+                requestCS(i);
+            }
+        }
+        enterCS();
+    }
+
+    private static void requestCS(int dest) {
+        System.out.println("Process " + processID + " sending request to Process " + dest);
+    }
+
+    private static void enterCS() {
+        System.out.println("Process " + processID + " entering critical section");
+        try {
+            Thread.sleep(2000); // Simulate work in critical section
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Process " + processID + " exiting critical section");
+    }
+}
+
+
+Output supposed to be:
+Enter process ID (0 to 4): 0
+Process 0 sending request to Process 1
+Process 0 sending request to Process 2
+Process 0 sending request to Process 3
+Process 0 sending request to Process 4
+Process 0 entering critical section
+Process 0 exiting critical section
+
+
+Explanation of code:
+-->Initialization:
+Prompt the user to input the process ID.
+Initialize variables and scanner for input.
+-->Requesting Critical Section Access:
+Iterate through all processes except the current one.
+Send a request message to each process for access to the critical section.
+-->Entering Critical Section:
+Enter the critical section and perform simulated work.
+Print a message indicating entry into the critical section.
+-->Exiting Critical Section:
+After completing the work, exit the critical section.
+Print a message indicating exit from the critical section.
+-->End of Program:
+Terminate the program after completing the critical section work.
+
+
+Let's break down the output based on the code execution:
+
+-->Sending Requests:
+Process 0 sends requests to all other processes (1, 2, 3, and 4) to gain access to the critical section. This is indicated by the messages "Process 0 sending request to Process X".
+-->Entering Critical Section:
+Process 0 successfully enters the critical section and starts performing its work. This is indicated by the message "Process 0 entering critical section".
+-->Exiting Critical Section:
+After completing the work, Process 0 exits the critical section. This is indicated by the message "Process 0 exiting critical section".
+-->End of Execution:
+Since there are no further actions or loops in the program, the execution ends after Process 0 exits the critical section.
