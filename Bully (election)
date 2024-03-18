@@ -1,0 +1,118 @@
+package ric_agr;
+
+import java.util.ArrayList;
+import java.util.List;
+
+class Process {
+    private int id;
+    private boolean coordinator;
+    private boolean active;
+
+    public Process(int id) {
+        this.id = id;
+        this.coordinator = false;
+        this.active = true;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public boolean isCoordinator() {
+        return coordinator;
+    }
+
+    public void setCoordinator(boolean coordinator) {
+        this.coordinator = coordinator;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+}
+
+public class BullyElectionAlgorithm {
+    private List<Process> processes;
+
+    public BullyElectionAlgorithm(int numProcesses) {
+        processes = new ArrayList<>();
+        for (int i = 0; i < numProcesses; i++) {
+            processes.add(new Process(i));
+        }
+    }
+
+    public void startElection(int processId) {
+        Process initiator = processes.get(processId);
+        boolean foundHigher = false;
+        for (int i = processId + 1; i < processes.size(); i++) {
+            Process process = processes.get(i);
+            if (process.isActive()) {
+                foundHigher = true;
+                System.out.println("Process " + initiator.getId() + " sends election message to Process " + process.getId());
+            }
+        }
+        if (!foundHigher) {
+            initiator.setCoordinator(true);
+            System.out.println("Process " + initiator.getId() + " becomes coordinator");
+            notifyCoordinator(processId);
+        }
+    }
+
+    private void notifyCoordinator(int processId) {
+        for (int i = 0; i < processId; i++) {
+            Process process = processes.get(i);
+            if (process.isActive()) {
+                System.out.println("Process " + process.getId() + " receives coordinator message from Process " + processId);
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        BullyElectionAlgorithm electionAlgorithm = new BullyElectionAlgorithm(5); // Number of processes
+        electionAlgorithm.startElection(4); // Starting election from Process 4
+    }
+}
+
+
+Output:
+Process 4 becomes coordinator
+Process 0 receives coordinator message from Process 4
+Process 1 receives coordinator message from Process 4
+Process 2 receives coordinator message from Process 4
+Process 3 receives coordinator message from Process 4
+
+
+Let's break code down step by step:
+
+-->Process Class:
+Represents a process in the distributed system.
+Contains attributes such as ID, coordinator status, and activity status.
+Provides getters and setters for accessing and modifying process attributes.
+-->BullyElectionAlgorithm Class:
+Manages a list of processes.
+Initializes the list of processes in the constructor.
+Implements the startElection method to initiate the election process.
+Iterates through processes with higher IDs to determine if there are any active processes.
+If no active processes with higher IDs are found, the current process becomes the coordinator and notifies lower-ID processes.
+Implements the notifyCoordinator method to notify lower-ID processes about the new coordinator.
+-->Main Method:
+Creates an instance of the BullyElectionAlgorithm class with the specified number of processes (5 in this case).
+Initiates the election process by calling the startElection method with a specific process ID (4 in this case).
+
+
+let's break down the steps of the Bully Election Algorithm based on the provided output:
+
+-->Initiation of Election:
+Process 4 initiates the election process because it notices that the coordinator is no longer responsive or active.
+-->Sending Election Messages:
+Process 4 sends election messages to all processes with higher IDs (0, 1, 2, and 3). This is done to determine if any higher-ID processes are active and responsive.
+-->Election Results:
+Since no process with a higher ID responds to the election messages, Process 4 concludes that it is the highest-ID process and thus becomes the coordinator.
+-->Notification of New Coordinator:
+Process 4 notifies all lower-ID processes (0, 1, 2, and 3) about its coordinator status by sending coordinator messages to them.
+-->Receiving Coordinator Messages:
+Processes 0, 1, 2, and 3 receive coordinator messages from Process 4, confirming its coordinator status and updating their own coordinator information accordingly.
