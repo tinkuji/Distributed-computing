@@ -1,0 +1,115 @@
+package ric_agr;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+class Machine {
+    private int id;
+    private int clock;
+
+    public Machine(int id) {
+        this.id = id;
+        this.clock = new Random().nextInt(100); // Initialize clock with random value
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getClock() {
+        return clock;
+    }
+
+    public void setClock(int clock) {
+        this.clock = clock;
+    }
+}
+
+public class BerkeleyAlgorithm {
+    private List<Machine> machines;
+
+    public BerkeleyAlgorithm(int numMachines) {
+        machines = new ArrayList<>();
+        for (int i = 0; i < numMachines; i++) {
+            machines.add(new Machine(i));
+        }
+    }
+
+    public void synchronizeClocks() {
+        int sum = 0;
+        for (Machine machine : machines) {
+            sum += machine.getClock();
+        }
+        int average = sum / machines.size();
+
+        for (Machine machine : machines) {
+            machine.setClock(average);
+        }
+    }
+
+    public void printClocks() {
+        for (Machine machine : machines) {
+            System.out.println("Machine " + machine.getId() + ": Clock = " + machine.getClock());
+        }
+    }
+
+    public static void main(String[] args) {
+        BerkeleyAlgorithm algorithm = new BerkeleyAlgorithm(5); // Number of machines
+        System.out.println("Before synchronization:");
+        algorithm.printClocks();
+        algorithm.synchronizeClocks();
+        System.out.println("\nAfter synchronization:");
+        algorithm.printClocks();
+    }
+}
+
+
+Output:
+Before synchronization:
+Machine 0: Clock = 27
+Machine 1: Clock = 72
+Machine 2: Clock = 39
+Machine 3: Clock = 48
+Machine 4: Clock = 77
+
+After synchronization:
+Machine 0: Clock = 52
+Machine 1: Clock = 52
+Machine 2: Clock = 52
+Machine 3: Clock = 52
+Machine 4: Clock = 52
+
+
+Let's break down the Berkeley Algorithm implementation in simple terms:
+
+-->Machine Class:
+Represents a machine in the network.
+Each machine has an ID and a clock value.
+-->BerkeleyAlgorithm Class:
+Manages the clock synchronization process.
+Creates a list of machines and initializes them with random clock values.
+-->Synchronize Clocks Method:
+Calculates the average clock value of all machines.
+Sets the clock of each machine to the calculated average value.
+-->Print Clocks Method:
+Prints the ID and clock value of each machine.
+-->Main Method:
+Creates an instance of the BerkeleyAlgorithm class with a specified number of machines.
+Prints the clock values of all machines before synchronization.
+Calls the synchronizeClocks method to synchronize the clocks.
+Prints the clock values of all machines after synchronization.
+
+
+Output expl:
+-->Before Synchronization:
+Each machine has its own local clock reading, denoted by Clock = X.
+These local clocks may drift from the true time due to factors like hardware differences or network delays.
+-->Berkeley Algorithm:
+In the Berkeley Algorithm, one machine (the master) queries the time from all other machines (slaves).
+The master then calculates the time difference between its own clock and the clocks of the slaves.
+Based on these differences, the master computes an average adjustment value to synchronize the clocks.
+-->After Synchronization:
+The master sends adjustment values to each slave, instructing them to adjust their clocks accordingly.
+As a result, all clocks are synchronized to a common time, reducing the discrepancy between them.
+In the given scenario, all machines have adjusted their clocks to the synchronized time (Clock = 52).
